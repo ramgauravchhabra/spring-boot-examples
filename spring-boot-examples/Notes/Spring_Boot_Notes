@@ -1,0 +1,134 @@
+RAM
+- Spring Boot sits on top of the Spring(Spring MVC, Data, Security, Session, AMQP, Batch) which allows to boot applications fast
+- Spring boot reduced configuration which was there earlier in Spring
+- Spring use XML config files, even though they were less then EJB but still something needs to be done
+- After XML Spring configurations annotations was introduced
+- All of above Spring steps helped but did not soled the problem
+
+- Spring boot simply deployment as now no need to deploy WAR files seperately
+- It comes with emdedded servers like Tomcat, Jetty
+- Now no need to download, install and configure web serbers to run your applications
+
+Spring Boot Features
+- Automatic Configuration
+- Starter Dependencies
+- Command Line Interface
+- Actuator
+
+Automatic Configuration
+- Once we add any dependency in pom.xml, Spring Boot automatically add its configuration to save time
+- Automatic configure application based on library
+- Lets say we have added dependency to H2 database, Spring Boot auto configure your application for the specific database access you need
+
+Starter Dependencies (One stop shop)
+- spring-boot-start-web
+- spring-boot-starter-test
+- spring-boot-starter-data-jpa
+- spring-boot-starter-thymeleaf
+For example to make a web application:
+Spring Way
+<dependency>
+	<artifactid>springweb</artifactid>
+</dependency>
+<dependency>
+	<artifactid>springwebmvc</artifactid>
+</dependency>
+Spring Boot Way
+<dependency>
+	<artifactid>spring-boot-start-web</artifactid>
+</dependency>
+
+If we add spring-boot-starter-test in pom.xml, then Sprint boot automatically adds:
+- Junit
+- Mockito
+- Hamcrest
+- Spring Core
+- Spring Rest
+
+If we add spring-boot-starter-data-jpa in pom.xml, then Sprint boot automatically adds:
+- Spring data JPA with Hibernate
+- JDBC
+- Entity Manager
+- Transaction API
+- Spring Data JPA
+- Aspects
+
+If we add spring-boot-start-web in pom.xml, then Sprint boot automatically adds:
+Added for web application development
+- Spring MVC
+- Rest
+- Tomcat
+- Jackson : for JSON to java object mapping
+
+Spring Boot CLI
+- Command line interface for Spring Boot
+- Application can be written using groovy scripts
+- CLI mainly use for rapid prototyping
+
+Actuator
+- Allow you to see what actually going on inside of Spring boot application
+- Monitor Running Application
+- Manage via HTTP endpoints or JMX
+- We can see like Health Status, Metrics, Loggers, Audit Events, HTTP Trace
+
+-- Spring boot is simply an extension of Spring framework
+- Sprint boot much faster and simpler way to setup, configure and run application like automatic configuration, starter dependency etc
+
+Spring Initializer
+https://start.spring.io/
+This site will help to generate sample project and add dependencies automatically
+
+----------------------------------------------------------------------
+<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.1</version>
+		<relativePath/> <!-- lookup parent from repository -->
+</parent>
+This defines the version at parent level so that we should not define version at each independent dependency
+----------------------------------------------------------------------
+@SpringBootApplication
+- This annotation is defined at main class level
+- It boot strap our application by starting Spring, typically it creates Spring Application Cocntext Instance, load Spring beans etc.
+- @SpringBootApplication basically replaces 3 annotations in one go:
+	-: Replaces @Configuration and annotates a class as a configuration
+	-: @EnableAutoConfiguration : Tells spring boot to configure bean
+	-: @ComponentScan : Tell Spring boot to scan current package and subpackages
+----------------------------------------------------------------------
+How auto configure works
+- Find jars on classpath and auto configure beans
+- Lets say it finds JPA jar on classpath it automatically configure DataSource for hibernate or dispatcher servlet for MVC
+- In case we define our own beans like data source beans, then default embedded database support back away
+- To see what autom configuration is doing:
+	-: enable --debug switch to see all things in action
+	-: add simple property to application.properties
+	-: Use the Spring boot Actuator
+----------------------------------------------------------------------
+- To handle various things we can confiure multiple properties in application.properties
+----------------------------------------------------------------------
+Spring Boot Profiles
+- Spring boot support various profiles like one for each environment
+- Property can be defined as 'spring.profiles.active=dev' : This define active profile
+	-: applications-{profile}.properties : Naming Format
+		-:: applications-dev.properties
+		-:: applications-test.properties
+		-:: applications-prod.properties
+- Spring Boot will load all properties in application.properties for all profiles and then load environment specific property files
+----------------------------------------------------------------------
+H2 Default properties
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.h2.console.enabled=false
+----------------------------------------------------------------------
+Layering is like that:
+Database <-- Java Database Connectivity (JDBC) <-- Java Persistence API (JPA) <-- Spring Data JPA
+*** JPA is not implementation and only specification. For this to work it need some implementation and here comes Hibernate as implementation
+*** Spring uses Hibernate as persistence 
+----------------------------------------------------------------------
+spring-boot-starter-data-jpa automatically includes:
+Hibernate, Spring Data JPA, Spring ORM 
+----------------------------------------------------------------------
+*** We only need to create interface and rest Spring boot will do:
+	-: public interface TicketRepository extends CrudRepository<Ticket, Long> {
